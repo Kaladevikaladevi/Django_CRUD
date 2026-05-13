@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Update Recipe</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+
+            background:
+                linear-gradient(rgba(12, 18, 40, 0.88),
+                    rgba(12, 18, 40, 0.92)),
+                url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1400&auto=format&fit=crop");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+        }
+
+        .update-card {
+            width: 100%;
+            max-width: 650px;
+
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+
+            border-radius: 30px;
+            padding: 40px;
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 38px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .title span {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d1d5db;
+            margin-bottom: 35px;
+            font-size: 16px;
+        }
+
+        .form-label {
+            color: #f3f4f6;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border: none;
+            border-radius: 16px;
+            padding: 14px;
+
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+
+            font-size: 15px;
+
+            transition: 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: #d1d5db;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.16);
+            color: white;
+
+            border: 1px solid #ffb703;
+
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.35);
+        }
+
+        textarea.form-control {
+            min-height: 130px;
+            resize: none;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .btn-update {
+            width: 100%;
+
+            border: none;
+            padding: 14px;
+
+            border-radius: 16px;
+
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+
+            transition: 0.4s ease;
+
+            margin-top: 10px;
+        }
+
+        .btn-update:hover {
+            transform: translateY(-3px);
+
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.35);
+        }
+
+        .btn-back {
+            display: block;
+
+            text-align: center;
+            text-decoration: none;
+
+            margin-top: 16px;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            color: white;
+
+            padding: 13px;
+
+            border-radius: 16px;
+
+            font-weight: 600;
+
+            transition: 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.18);
+
+            transform: translateY(-2px);
+
+            color: #ffb703;
+        }
+
+        /* ================= QUOTE ================= */
+
+        .quote-box {
+            margin-top: 25px;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            border-left: 4px solid #ffb703;
+
+            padding: 18px;
+
+            border-radius: 14px;
+
+            color: #e5e7eb;
+
+            font-style: italic;
+
+            text-align: center;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 768px) {
+
+            .update-card {
+                padding: 28px;
+            }
+
+            .title {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .title {
+                font-size: 26px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="update-card">
+
+        <!-- TITLE -->
+
+        <h1 class="title">
+            ✏ <span>Update Recipe</span>
+        </h1>
+
+        <p class="subtitle">
+            Edit your delicious recipe details below 🍲
+        </p>
+
+        <!-- FORM -->
+
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Recipe Name
+                </label>
+
+                <input type="text"
+                    class="form-control"
+                    name="recipe_name"
+                    value="{{ recipe.recipe_name }}">
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Recipe Description
+                </label>
+
+                <textarea class="form-control"
+                    name="recipe_description">{{ recipe.recipe_description }}</textarea>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    Recipe Image
+                </label>
+
+                <input type="file"
+                    class="form-control"
+                    name="recipe_image">
+
+            </div>
+
+            <!-- UPDATE BUTTON -->
+
+            <button type="submit" class="btn-update">
+                🍳 Update Recipe
+            </button>
+
+            <!-- BACK BUTTON -->
+
+            <a href="/" class="btn-back">
+                ⬅ Back to Recipes
+            </a>
+
+        </form>
+
+        <!-- QUOTE -->
+
+        <div class="quote-box">
+            “Cooking is love made visible.” ❤️
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recipe CRUD App</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background:
+                linear-gradient(rgba(8, 15, 35, 0.88),
+                    rgba(8, 15, 35, 0.92)),
+                url("https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1400&auto=format&fit=crop");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1300px;
+        }
+
+        /* ================= TITLE ================= */
+
+        .main-title {
+            text-align: center;
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .main-title span {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-text {
+            text-align: center;
+            color: #d1d5db;
+            font-size: 18px;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        /* ================= QUOTE CARD ================= */
+
+        .quote-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .quote-card h3 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: #ffb703;
+        }
+
+        .quote-card p {
+            font-size: 18px;
+            color: #e5e7eb;
+            line-height: 1.8;
+        }
+
+        /* ================= FORM CARD ================= */
+
+        .recipe-form-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+            border-radius: 30px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .form-title {
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        .form-label {
+            color: #f3f4f6;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            border-radius: 16px;
+            padding: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 15px;
+        }
+
+        .form-control::placeholder {
+            color: #d1d5db;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.16);
+            box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+            border: 1px solid #ffb703;
+            color: white;
+        }
+
+        textarea.form-control {
+            min-height: 130px;
+            resize: none;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .btn-add {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            transition: 0.4s ease;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(251, 133, 0, 0.35);
+        }
+
+        /* ================= SECTION TITLE ================= */
+
+        .section-title {
+            text-align: center;
+            margin: 60px 0 35px;
+            font-size: 38px;
+            font-weight: 800;
+            color: white;
+        }
+
+        /* ================= RECIPE GRID ================= */
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 30px;
+        }
+
+        /* ================= RECIPE CARD ================= */
+
+        .recipe-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: 0.4s ease;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+        }
+
+        .recipe-content {
+            padding: 24px;
+        }
+
+        .recipe-id {
+            display: inline-block;
+            background: rgba(255, 183, 3, 0.15);
+            color: #ffb703;
+            padding: 7px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .recipe-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: white;
+        }
+
+        .recipe-description {
+            color: #d1d5db;
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 22px;
+        }
+
+        /* ================= MINI QUOTE ================= */
+
+        .food-quote {
+            background: rgba(255, 255, 255, 0.06);
+            border-left: 4px solid #ffb703;
+            padding: 14px;
+            border-radius: 14px;
+            color: #f3f4f6;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* ================= BUTTONS ================= */
+
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+        }
+
+        .btn-update,
+        .btn-delete {
+            flex: 1;
+            padding: 12px;
+            border-radius: 14px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s ease;
+        }
+
+        .btn-update {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-update:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: scale(1.05);
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 768px) {
+
+            .main-title {
+                font-size: 36px;
+            }
+
+            .section-title {
+                font-size: 30px;
+            }
+
+            .recipe-form-card {
+                padding: 28px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .recipe-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .main-title {
+                font-size: 30px;
+            }
+
+            .quote-card h3 {
+                font-size: 22px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container py-5">
+
+        <!-- MAIN TITLE -->
+
+        <h1 class="main-title">
+            🍲 <span>Recipe CRUD App</span>
+        </h1>
+
+        <p class="sub-text">
+            “Cooking is an art, and every recipe tells a story.” 🍽
+        </p>
+
+        <!-- QUOTE CARD -->
+
+        <div class="quote-card">
+
+            <h3>✨ Delicious Thoughts ✨</h3>
+
+            <p>
+                “Good food is the foundation of genuine happiness.”
+            </p>
+
+        </div>
+
+        <!-- FORM -->
+
+        <div class="recipe-form-card">
+
+            <h2 class="form-title">
+                ➕ Add New Recipe
+            </h2>
+
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Recipe Name
+                    </label>
+
+                    <input type="text"
+                        class="form-control"
+                        name="recipe_name"
+                        placeholder="Enter recipe name">
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Recipe Description
+                    </label>
+
+                    <textarea class="form-control"
+                        name="recipe_description"
+                        placeholder="Write recipe details..."></textarea>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Recipe Image
+                    </label>
+
+                    <input type="file"
+                        class="form-control"
+                        name="recipe_image">
+
+                </div>
+
+                <button type="submit" class="btn-add">
+                    🍳 Add Recipe
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- RECIPE SECTION -->
+
+        <h2 class="section-title">
+            🍴 Recipe Collection
+        </h2>
+
+        <div class="recipe-grid">
+
+            {% for recipe in recipes %}
+
+            <div class="recipe-card">
+
+                <img src="/media/{{ recipe.recipe_image }}"
+                    class="recipe-image"
+                    alt="Recipe Image">
+
+                <div class="recipe-content">
+
+                    <span class="recipe-id">
+                        Recipe #{{ recipe.id }}
+                    </span>
+
+                    <h3 class="recipe-name">
+                        {{ recipe.recipe_name }}
+                    </h3>
+
+                    <p class="recipe-description">
+                        {{ recipe.recipe_description }}
+                    </p>
+
+                    <!-- MINI QUOTE -->
+
+                    <div class="food-quote">
+                        “Made with love and delicious flavors.” ❤️
+                    </div>
+
+                    <!-- BUTTONS -->
+
+                    <div class="action-buttons">
+
+                        <a href="/update-recipe/{{ recipe.id }}/"
+                            class="btn-update">
+                            ✏ Update
+                        </a>
+
+                        <a href="/delete-recipe/{{ recipe.id }}/"
+                            class="btn-delete">
+                            🗑 Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
